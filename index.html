@@ -7,29 +7,174 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        /* Styles for Windows-style Terminal */
+        .terminal-window {
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #cccccc;
+            border-radius: 0; /* Rectangular like Windows CMD */
+            width: 600px;
+            max-width: 100%;
+            min-width: 300px;
+            min-height: 150px;
+            resize: both;
+            overflow: auto;
+            position: absolute;
+            top: 100px; /* Initial position above main content */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            font-family: 'Share Tech Mono', monospace;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+        }
+        .terminal-header {
+            background: #c0c0c0; /* Windows CMD title bar gray */
+            padding: 5px 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #999999;
+            cursor: move; /* Enable dragging */
+        }
+        .terminal-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        .terminal-btn {
+            width: 16px;
+            height: 16px;
+            border: 1px solid #999999;
+            cursor: pointer;
+            font-size: 12px;
+            text-align: center;
+            line-height: 14px;
+        }
+        .terminal-btn.red { background: #ff0000; color: #ffffff; }
+        .terminal-btn.red::before { content: 'X'; }
+        .terminal-btn.yellow { background: #ffff00; color: #000000; }
+        .terminal-btn.yellow::before { content: '−'; }
+        .terminal-btn.green { background: #008000; color: #ffffff; }
+        .terminal-btn.green::before { content: '□'; }
+        .terminal-title {
+            color: #000000;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 14px;
+        }
+        .terminal-body {
+            padding: 15px;
+            color: #00ff00; /* Green for output text */
+            flex: 1 1 auto; /* Allow body to fill available space */
+            min-height: 100px;
+            overflow-y: auto; /* Ensure vertical scrolling if content overflows */
+            position: relative;
+        }
+        .terminal-body p.command { color: #00b7eb; } /* Blue for commands */
+        .terminal-body p.prompt { color: #ffffff; } /* White for prompts */
+        .terminal-body p { margin: 5px 0; word-break: break-all; } /* Ensure text wraps */
+        .blink { animation: blink 1s step-end infinite; }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+        .minimized {
+            height: 26px; /* Matches header height */
+            overflow: hidden;
+        }
+        .minimized .terminal-body {
+            display: none;
+        }
+        .terminal-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-family: 'Share Tech Mono', monospace;
+            outline: none;
+            padding: 5px 0;
+            box-sizing: border-box; /* Ensure padding doesn't affect width */
+        }
+        .terminal-input::placeholder {
+            color: #666666;
+        }
+        .tutorial {
+            color: #cccccc;
+            font-size: 12px;
+            border-top: 1px dashed #666666;
+            padding-top: 10px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.9); /* Match terminal background */
+            margin: 0 15px 15px 15px; /* Match padding for consistency */
+            pointer-events: none; /* Lock it in place, non-interactive */
+        }
+        .tutorial-title {
+            color: #00b7eb;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        /* Projects Section Styles (to match existing theme) */
+        .projects-section {
+            padding: 60px 0;
+        }
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .project-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+        .project-content {
+            text-align: left;
+        }
+        .project-title {
+            color: #ffffff;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .project-description {
+            color: #cccccc;
+            font-family: 'Rajdhani', sans-serif;
+            margin-bottom: 15px;
+        }
+        .project-tech {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .project-tech span {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .project-link {
+            color: #00b7eb;
+            text-decoration: none;
+            margin-right: 15px;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .project-link:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <!-- Animated Circuit Background -->
     <div class="circuit-bg"></div>
     
-    <!-- Terminal Window -->
-    <div class="terminal-window">
-        <div class="terminal-header">
-            <div class="terminal-buttons">
-                <span class="terminal-btn red"></span>
-                <span class="terminal-btn yellow"></span>
-                <span class="terminal-btn green"></span>
-            </div>
-            <div class="terminal-title">brazil_rivera.exe</div>
-        </div>
-        <div class="terminal-body" id="terminal-output">
-            <p>> Initializing portfolio system...</p>
-            <p>> Loading professional credentials...</p>
-            <p>> Establishing secure connection...</p>
-            <p class="blink">> Ready</p>
-        </div>
-    </div>
-
     <header class="tech-header">
         <div class="container">
             <div class="header-grid">
@@ -45,9 +190,10 @@
                 <nav class="tech-nav">
                     <ul>
                         <li><a href="#about" class="nav-link"><span class="nav-number">01.</span> ABOUT</a></li>
-                        <li><a href="#experience" class="nav-link"><span class="nav-number">02.</span> EXPERIENCE</a></li>
-                        <li><a href="#skills" class="nav-link"><span class="nav-number">03.</span> SKILLS</a></li>
-                        <li><a href="#contact" class="nav-link"><span class="nav-number">04.</span> CONTACT</a></li>
+                        <li><a href="#projects" class="nav-link"><span class="nav-number">02.</span> PROJECTS</a></li>
+                        <li><a href="#experience" class="nav-link"><span class="nav-number">03.</span> EXPERIENCE</a></li>
+                        <li><a href="#skills" class="nav-link"><span class="nav-number">04.</span> SKILLS</a></li>
+                        <li><a href="#contact" class="nav-link"><span class="nav-number">05.</span> CONTACT</a></li>
                     </ul>
                 </nav>
                 <div class="hamburger">
@@ -58,6 +204,34 @@
             </div>
         </div>
     </header>
+
+    <!-- Windows-style Terminal (Draggable and Interactive) -->
+    <div class="terminal-window">
+        <div class="terminal-header">
+            <div class="terminal-buttons">
+                <span class="terminal-btn red"></span>
+                <span class="terminal-btn yellow" onclick="toggleMinimize(this)"></span>
+                <span class="terminal-btn green"></span>
+            </div>
+            <div class="terminal-title">Command Prompt - portfolio.exe</div>
+        </div>
+        <div class="terminal-body" id="terminal-output">
+            <p class="command">portfolio.exe</p>
+            <p>Initializing portfolio system...</p>
+            <p>Loading professional credentials...</p>
+            <p class="prompt">C:\Users\Brazil\Portfolio> <input type="text" class="terminal-input" id="terminal-input" placeholder="Type command..."></p>
+            <div class="tutorial">
+                <div class="tutorial-title">Type me!!</div>
+                Available commands:<br>
+                - cd about: Scroll to About section<br>
+                - cd projects: Scroll to Projects section<br>
+                - cd experience: Scroll to Experience section<br>
+                - cd skills: Scroll to Skills section<br>
+                - cd contact: Scroll to Contact section<br>
+                - nano message: Focus on Message textarea
+            </div>
+        </div>
+    </div>
 
     <main class="tech-main">
         <section id="about" class="tech-section about-section">
@@ -88,7 +262,7 @@
                         </div>
                         <div class="about-image">
                             <div class="tech-image-frame">
-                                <img src="assets\images\image.jpg" alt="Brazil Rivera" class="profile-image">
+                                <img src="assets/images/image.jpg" alt="Brazil Rivera" class="profile-image">
                                 <div class="image-border"></div>
                                 <div class="image-overlay"></div>
                             </div>
@@ -108,10 +282,65 @@
             </div>
         </section>
 
+        <section id="projects" class="tech-section projects-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title"><span class="title-number">02.</span> PERSONAL_PROJECTS</h2>
+                    <div class="title-line"></div>
+                </div>
+                <div class="projects-grid">
+                    <!-- Project 1 -->
+                    <div class="project-card">
+                        <div class="project-content">
+                            <h3 class="project-title">AI Surveillance System</h3>
+                            <p class="project-description">A custom AI-powered surveillance system integrating facial recognition and anomaly detection across Windows and Linux platforms.</p>
+                            <div class="project-tech">
+                                <span>Python</span>
+                                <span>OpenCV</span>
+                                <span>TensorFlow</span>
+                            </div>
+                            <a href="https://www.youtube.com/watch?v=your-video-id" class="project-link">Watch Demo Video</a>
+                            <a href="https://github.com/your-repo/ai-surveillance" class="project-link">GitHub Repo</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 2 -->
+                    <div class="project-card">
+                        <div class="project-content">
+                            <h3 class="project-title">Cross-Platform Deployment Tool</h3>
+                            <p class="project-description">A tool for automating AI model deployment across different operating systems with minimal configuration.</p>
+                            <div class="project-tech">
+                                <span>Bash</span>
+                                <span>PowerShell</span>
+                                <span>Docker</span>
+                            </div>
+                            <a href="https://www.youtube.com/watch?v=your-video-id" class="project-link">Watch Demo Video</a>
+                            <a href="https://github.com/your-repo/deployment-tool" class="project-link">GitHub Repo</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 3 -->
+                    <div class="project-card">
+                        <div class="project-content">
+                            <h3 class="project-title">Network Monitoring Dashboard</h3>
+                            <p class="project-description">A unified dashboard for monitoring network health across Windows and Linux environments.</p>
+                            <div class="project-tech">
+                                <span>Node.js</span>
+                                <span>React</span>
+                                <span>SNMP</span>
+                            </div>
+                            <a href="https://www.youtube.com/watch?v=your-video-id" class="project-link">Watch Demo Video</a>
+                            <a href="https://your-site.com/network-dashboard" class="project-link">Live Demo</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="experience" class="tech-section experience-section">
             <div class="container">
                 <div class="section-header">
-                    <h2 class="section-title"><span class="title-number">02.</span> WORK_EXPERIENCE</h2>
+                    <h2 class="section-title"><span class="title-number">03.</span> WORK_EXPERIENCE</h2>
                     <div class="title-line"></div>
                 </div>
                 <div class="experience-tabs">
@@ -146,7 +375,7 @@
         <section id="skills" class="tech-section skills-section">
             <div class="container">
                 <div class="section-header">
-                    <h2 class="section-title"><span class="title-number">03.</span> TECHNICAL_SKILLS</h2>
+                    <h2 class="section-title"><span class="title-number">04.</span> TECHNICAL_SKILLS</h2>
                     <div class="title-line"></div>
                 </div>
                 <div class="skills-grid">
@@ -236,7 +465,7 @@
         <section id="contact" class="tech-section contact-section">
             <div class="container">
                 <div class="section-header">
-                    <h2 class="section-title"><span class="title-number">04.</span> CONTACT_ME</h2>
+                    <h2 class="section-title"><span class="title-number">05.</span> CONTACT_ME</h2>
                     <div class="title-line"></div>
                 </div>
                 <div class="contact-grid">
@@ -271,15 +500,17 @@
                                     <div class="detail-value">United Arab Emirates</div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="contact-reference">
-                            <h4>REFERENCE:</h4>
-                            <p>Major Salim Kubaisi</p>
-                            <p>ICT Department Section Manager</p>
-                            <p>Umm Al Quwain Police General Head Quarter</p>
-                            <p>email</p>
-                            <p>contact number</p>
-                            <p>contact information will given privately</p>
+                            <div class="detail-item">
+                                <div class="detail-icon">
+                                    <i class="fab fa-linkedin"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <div class="detail-label">LINKEDIN</div>
+                                    <div class="detail-value">
+                                        <a href="https://www.linkedin.com/in/brazil-rivera-48396a155/" target="_blank" rel="noopener">brazil-rivera-48396a155</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="contact-form">
@@ -325,6 +556,7 @@
                 </div>
                 <div class="footer-links">
                     <a href="#about">ABOUT</a>
+                    <a href="#projects">PROJECTS</a>
                     <a href="#experience">EXPERIENCE</a>
                     <a href="#skills">SKILLS</a>
                     <a href="#contact">CONTACT</a>
@@ -337,5 +569,136 @@
     </footer>
 
     <script src="assets/js/script.js"></script>
+    <script>
+        // Calculate age dynamically
+        document.addEventListener('DOMContentLoaded', function() {
+            const birthYear = 1990; // Update with your birth year
+            const currentYear = new Date().getFullYear();
+            document.getElementById('age').textContent = currentYear - birthYear;
+            document.getElementById('current-year').textContent = currentYear;
+            
+            // Terminal animation
+            const terminalLines = [
+                { text: "portfolio.exe", class: "command" },
+                { text: "Initializing portfolio system...", class: "" },
+                { text: "Loading professional credentials...", class: "" },
+                { text: "C:\\Users\\Brazil\\Portfolio> ", class: "prompt" }
+            ];
+            
+            let currentLine = 0;
+            const terminalOutput = document.getElementById('terminal-output');
+            
+            function typeTerminalLines() {
+                if (currentLine < terminalLines.length) {
+                    const newLine = document.createElement('p');
+                    newLine.textContent = terminalLines[currentLine].text;
+                    if (terminalLines[currentLine].class) {
+                        newLine.className = terminalLines[currentLine].class;
+                    }
+                    terminalOutput.appendChild(newLine);
+                    currentLine++;
+                    setTimeout(typeTerminalLines, 1500);
+                } else {
+                    addInputLine();
+                }
+            }
+            
+            function addInputLine() {
+                const inputLine = document.createElement('p');
+                inputLine.className = 'prompt';
+                inputLine.innerHTML = 'C:\\Users\\Brazil\\Portfolio> <input type="text" class="terminal-input" id="terminal-input" placeholder="Type command...">';
+                terminalOutput.appendChild(inputLine);
+                document.getElementById('terminal-input').focus();
+                setupInputListener();
+            }
+
+            setTimeout(typeTerminalLines, 2000);
+
+            // Minimize terminal functionality
+            function toggleMinimize(button) {
+                const terminal = button.closest('.terminal-window');
+                terminal.classList.toggle('minimized');
+            }
+
+            // Drag and drop functionality for terminal
+            let isDragging = false;
+            let currentX;
+            let currentY;
+            let initialX;
+            let initialY;
+
+            document.querySelector('.terminal-header').addEventListener('mousedown', startDragging);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', stopDragging);
+
+            function startDragging(e) {
+                initialX = e.clientX - currentX;
+                initialY = e.clientY - currentY;
+                isDragging = true;
+            }
+
+            function drag(e) {
+                if (isDragging) {
+                    e.preventDefault();
+                    currentX = e.clientX - initialX;
+                    currentY = e.clientY - initialY;
+
+                    const terminal = document.querySelector('.terminal-window');
+                    terminal.style.left = currentX + 'px';
+                    terminal.style.top = currentY + 'px';
+                }
+            }
+
+            function stopDragging() {
+                isDragging = false;
+            }
+
+            // Initialize terminal position
+            const terminal = document.querySelector('.terminal-window');
+            currentX = terminal.offsetLeft;
+            currentY = terminal.offsetTop;
+
+            // Interactive terminal commands
+            function setupInputListener() {
+                const input = document.getElementById('terminal-input');
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        const command = input.value.trim().toLowerCase();
+                        const output = document.createElement('p');
+                        output.className = 'command';
+                        output.textContent = `C:\\Users\\Brazil\\Portfolio> ${command}`;
+                        terminalOutput.appendChild(output);
+
+                        switch (command) {
+                            case 'cd about':
+                                document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
+                                break;
+                            case 'cd projects':
+                                document.getElementById('projects').scrollIntoView({ behavior: 'smooth' });
+                                break;
+                            case 'cd experience':
+                                document.getElementById('experience').scrollIntoView({ behavior: 'smooth' });
+                                break;
+                            case 'cd skills':
+                                document.getElementById('skills').scrollIntoView({ behavior: 'smooth' });
+                                break;
+                            case 'cd contact':
+                                document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+                                break;
+                            case 'nano message':
+                                document.getElementById('message').focus();
+                                break;
+                            default:
+                                terminalOutput.appendChild(document.createElement('p')).textContent = 'Command not recognized. Type "help" for available commands.';
+                        }
+
+                        // Clear input and add new prompt
+                        input.remove();
+                        addInputLine();
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
