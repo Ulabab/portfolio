@@ -219,16 +219,16 @@
             <p class="command">portfolio.exe</p>
             <p>Initializing portfolio system...</p>
             <p>Loading professional credentials...</p>
-            <p class="prompt">C:\Users\Brazil\Portfolio> <input type="text" class="terminal-input" id="terminal-input" placeholder="Type command..."></p>
             <div class="tutorial">
                 <div class="tutorial-title">Type me!!</div>
                 Available commands:<br>
-                - cd about: Scroll to About section<br>
-                - cd projects: Scroll to Projects section<br>
-                - cd experience: Scroll to Experience section<br>
-                - cd skills: Scroll to Skills section<br>
-                - cd contact: Scroll to Contact section<br>
-                - nano message: Focus on Message textarea
+                - cat about: Scroll to About section<br>
+                - cat projects: Scroll to Projects section<br>
+                - cat experience: Scroll to Experience section<br>
+                - cat skills: Scroll to Skills section<br>
+                - cat contact: Scroll to Contact section<br>
+                - nano message: Focus on Message textarea<br>
+                - clear: Clear all messages
             </div>
         </div>
     </div>
@@ -577,42 +577,41 @@
             document.getElementById('age').textContent = currentYear - birthYear;
             document.getElementById('current-year').textContent = currentYear;
             
-            // Terminal animation
-            const terminalLines = [
-                { text: "portfolio.exe", class: "command" },
-                { text: "Initializing portfolio system...", class: "" },
-                { text: "Loading professional credentials...", class: "" },
-                { text: "C:\\Users\\Brazil\\Portfolio> ", class: "prompt" }
-            ];
-            
-            let currentLine = 0;
+            // Terminal initialization
             const terminalOutput = document.getElementById('terminal-output');
-            
-            function typeTerminalLines() {
-                if (currentLine < terminalLines.length) {
-                    const newLine = document.createElement('p');
-                    newLine.textContent = terminalLines[currentLine].text;
-                    if (terminalLines[currentLine].class) {
-                        newLine.className = terminalLines[currentLine].class;
-                    }
-                    terminalOutput.appendChild(newLine);
-                    currentLine++;
-                    setTimeout(typeTerminalLines, 1500);
-                } else {
-                    addInputLine();
+            let inputLineExists = false;
+
+            function addInputLine() {
+                if (!inputLineExists) {
+                    const inputLine = document.createElement('div');
+                    inputLine.id = 'terminal-input-line';
+                    inputLine.className = 'prompt';
+                    inputLine.innerHTML = 'brazil@DE$ <input type="text" class="terminal-input" id="terminal-input" placeholder="type command ...">';
+                    terminalOutput.appendChild(inputLine);
+                    document.getElementById('terminal-input').focus();
+                    inputLineExists = true;
+                    setupInputListener();
                 }
             }
-            
-            function addInputLine() {
-                const inputLine = document.createElement('p');
-                inputLine.className = 'prompt';
-                inputLine.innerHTML = 'C:\\Users\\Brazil\\Portfolio> <input type="text" class="terminal-input" id="terminal-input" placeholder="Type command...">';
-                terminalOutput.appendChild(inputLine);
-                document.getElementById('terminal-input').focus();
-                setupInputListener();
+
+            function removeInputLine() {
+                const existingInputLine = document.getElementById('terminal-input-line');
+                if (existingInputLine) {
+                    existingInputLine.remove();
+                    inputLineExists = false;
+                }
             }
 
-            setTimeout(typeTerminalLines, 2000);
+            function clearTerminal() {
+                const lines = terminalOutput.getElementsByTagName('p');
+                while (lines.length > 0) {
+                    lines[0].remove();
+                }
+                addInputLine();
+            }
+
+            // Initial setup
+            addInputLine();
 
             // Minimize terminal functionality
             function toggleMinimize(button) {
@@ -666,34 +665,37 @@
                         const command = input.value.trim().toLowerCase();
                         const output = document.createElement('p');
                         output.className = 'command';
-                        output.textContent = `C:\\Users\\Brazil\\Portfolio> ${command}`;
-                        terminalOutput.appendChild(output);
+                        output.textContent = `brazil@DE$ ${command}`;
+                        terminalOutput.insertBefore(output, document.getElementById('terminal-input-line'));
 
                         switch (command) {
-                            case 'cd about':
+                            case 'cat about':
                                 document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
                                 break;
-                            case 'cd projects':
+                            case 'cat projects':
                                 document.getElementById('projects').scrollIntoView({ behavior: 'smooth' });
                                 break;
-                            case 'cd experience':
+                            case 'cat experience':
                                 document.getElementById('experience').scrollIntoView({ behavior: 'smooth' });
                                 break;
-                            case 'cd skills':
+                            case 'cat skills':
                                 document.getElementById('skills').scrollIntoView({ behavior: 'smooth' });
                                 break;
-                            case 'cd contact':
+                            case 'cat contact':
                                 document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
                                 break;
                             case 'nano message':
                                 document.getElementById('message').focus();
                                 break;
+                            case 'clear':
+                                clearTerminal();
+                                break;
                             default:
-                                terminalOutput.appendChild(document.createElement('p')).textContent = 'Command not recognized. Type "help" for available commands.';
+                                terminalOutput.insertBefore(document.createElement('p'), document.getElementById('terminal-input-line')).textContent = 'Command not recognized. Type "help" for available commands.';
                         }
 
-                        // Clear input and add new prompt
-                        input.remove();
+                        // Remove existing input and add new one
+                        removeInputLine();
                         addInputLine();
                     }
                 });
