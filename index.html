@@ -13,16 +13,15 @@
             background: rgba(0, 0, 0, 0.9);
             border: 1px solid #cccccc;
             border-radius: 0; /* Rectangular like Windows CMD */
-            width: 600px;
+            width: 450px; /* Smaller width */
             max-width: 100%;
             min-width: 300px;
-            min-height: 150px;
+            min-height: 200px;
             resize: both;
             overflow: auto;
-            position: absolute;
-            top: 100px; /* Initial position above main content */
-            left: 50%;
-            transform: translateX(-50%);
+            position: fixed; /* Changed to fixed */
+            bottom: 20px; /* Positioned at bottom */
+            right: 20px; /* Positioned at right */
             z-index: 1000;
             font-family: 'Share Tech Mono', monospace;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
@@ -219,6 +218,7 @@
             <p class="command">portfolio.exe</p>
             <p>Initializing portfolio system...</p>
             <p>Loading professional credentials...</p>
+            <p class="prompt">brazil@DE$ <span class="blink">_</span></p>
             <div class="tutorial">
                 <div class="tutorial-title">Type me!!</div>
                 Available commands:<br>
@@ -289,48 +289,12 @@
                     <div class="title-line"></div>
                 </div>
                 <div class="projects-grid">
-                    <!-- Project 1 -->
                     <div class="project-card">
                         <div class="project-content">
-                            <h3 class="project-title">AI Surveillance System</h3>
-                            <p class="project-description">A custom AI-powered surveillance system integrating facial recognition and anomaly detection across Windows and Linux platforms.</p>
-                            <div class="project-tech">
-                                <span>Python</span>
-                                <span>OpenCV</span>
-                                <span>TensorFlow</span>
-                            </div>
-                            <a href="https://www.youtube.com/watch?v=your-video-id" class="project-link">Watch Demo Video</a>
-                            <a href="https://github.com/your-repo/ai-surveillance" class="project-link">GitHub Repo</a>
-                        </div>
-                    </div>
-                    
-                    <!-- Project 2 -->
-                    <div class="project-card">
-                        <div class="project-content">
-                            <h3 class="project-title">Cross-Platform Deployment Tool</h3>
-                            <p class="project-description">A tool for automating AI model deployment across different operating systems with minimal configuration.</p>
-                            <div class="project-tech">
-                                <span>Bash</span>
-                                <span>PowerShell</span>
-                                <span>Docker</span>
-                            </div>
-                            <a href="https://www.youtube.com/watch?v=your-video-id" class="project-link">Watch Demo Video</a>
-                            <a href="https://github.com/your-repo/deployment-tool" class="project-link">GitHub Repo</a>
-                        </div>
-                    </div>
-                    
-                    <!-- Project 3 -->
-                    <div class="project-card">
-                        <div class="project-content">
-                            <h3 class="project-title">Network Monitoring Dashboard</h3>
-                            <p class="project-description">A unified dashboard for monitoring network health across Windows and Linux environments.</p>
-                            <div class="project-tech">
-                                <span>Node.js</span>
-                                <span>React</span>
-                                <span>SNMP</span>
-                            </div>
-                            <a href="https://www.youtube.com/watch?v=your-video-id" class="project-link">Watch Demo Video</a>
-                            <a href="https://your-site.com/network-dashboard" class="project-link">Live Demo</a>
+                            <h3 class="project-title">Exciting Projects Coming Soon!</h3>
+                            <p class="project-description">I'm currently working on some innovative AI deployment solutions that will be showcased here soon. Stay tuned for updates!</p>
+                            <p class="project-description">In the meantime, why not try the interactive terminal? Type "help" to see available commands.</p>
+                            <p class="project-description">New projects to be published in Q4 2023 featuring cutting-edge AI deployment techniques and cross-platform solutions.</p>
                         </div>
                     </div>
                 </div>
